@@ -1,56 +1,192 @@
+Aquí tienes el archivo `index.html` completo y definitivo. He integrado la lógica de conexión con Google Sheets y el diseño académico en un solo bloque.
+
+Solo tienes que copiar esto, pegarlo en tu archivo, y cambiar las dos líneas marcadas al principio del script.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decision Dynamics in Public Health AI</title>
+    <title>Research Study: Decision Dynamics in AI</title>
+    
     <style>
-        body { font-family: "Georgia", serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }
-        .container { background: white; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 5px; }
-        h1, h2 { color: #2c3e50; font-family: "Helvetica Neue", sans-serif; }
+        body { 
+            font-family: "Georgia", "Times New Roman", serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            background-color: #f5f5f5; 
+        }
+        .container { 
+            background: white; 
+            padding: 50px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            border-radius: 8px; 
+            border-top: 5px solid #2c3e50;
+        }
+        h1 { 
+            color: #2c3e50; 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            font-size: 24px; 
+            margin-bottom: 20px; 
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        h2 { 
+            color: #34495e; 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+            font-size: 20px; 
+            margin-top: 0;
+        }
+        p, li { font-size: 17px; }
         .hidden { display: none; }
-        .btn { background-color: #2c3e50; color: white; border: none; padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 4px; margin-top: 20px; }
-        .btn:hover { background-color: #34495e; }
-        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
-        .error { color: #c0392b; font-size: 0.9em; margin-top: 5px; display: none; }
-        label { display: block; margin-bottom: 10px; font-weight: bold; }
-        input[type="radio"] { margin-right: 10px; }
-        .question-block { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
-        .scenario-box { background-color: #e8f4f8; padding: 20px; border-left: 5px solid #3498db; margin: 20px 0; font-style: italic; }
-        .scale-labels { display: flex; justify-content: space-between; font-size: 0.8em; color: #666; margin-bottom: 10px; }
+        
+        /* BOTONES */
+        .btn { 
+            background-color: #2980b9; 
+            color: white; 
+            border: none; 
+            padding: 14px 28px; 
+            font-size: 16px; 
+            font-weight: bold;
+            cursor: pointer; 
+            border-radius: 4px; 
+            margin-top: 30px; 
+            transition: background 0.3s;
+        }
+        .btn:hover { background-color: #1f618d; }
+        .btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+        
+        /* FORMULARIOS Y PREGUNTAS */
+        .question-block { margin-bottom: 35px; }
+        label { display: block; margin-bottom: 12px; font-weight: bold; color: #2c3e50; }
+        select, input[type="number"] { 
+            padding: 10px; 
+            font-size: 16px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            width: 100%; 
+            max-width: 300px;
+        }
+        .error { 
+            color: #c0392b; 
+            background-color: #fadbd8; 
+            padding: 10px; 
+            border-radius: 4px; 
+            margin-top: 15px; 
+            display: none; 
+            font-weight: bold;
+        }
+        
+        /* ESCENARIOS Y ESTÍMULOS */
+        .scenario-box { 
+            background-color: #eaf2f8; 
+            padding: 25px; 
+            border-left: 5px solid #2980b9; 
+            margin: 25px 0; 
+            font-style: normal;
+        }
+        .highlight-box {
+            background-color: #fdfefe;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        /* SLIDERS (RANGE INPUTS) */
+        input[type=range] {
+            -webkit-appearance: none; 
+            width: 100%; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #2980b9;
+            cursor: pointer;
+            margin-top: -10px; 
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #ddd;
+            border-radius: 2px;
+        }
+        .scale-labels { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 14px; 
+            color: #7f8c8d; 
+            margin-bottom: 10px; 
+            font-family: Arial, sans-serif;
+        }
+        output { 
+            display: block; 
+            text-align: center; 
+            font-weight: bold; 
+            color: #2980b9; 
+            margin-top: 5px; 
+        }
+
+        /* LOADING SPINNER */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <div class="container">
+    
     <div id="slide-consent">
         <h1>Informed Consent</h1>
-        <p>You are invited to participate in a study on decision-making in public health contexts. This study is conducted by researchers in Cognitive Science.</p>
-        <ul>
-            <li><strong>Duration:</strong> Approximately 5-7 minutes.</li>
-            <li><strong>Anonymity:</strong> All data is anonymous. We only record your Prolific ID for payment.</li>
-            <li><strong>Voluntary:</strong> You may withdraw at any time by closing the browser (payment will not be issued).</li>
-        </ul>
-        <div class="question-block">
-            <label><input type="checkbox" id="consent-check"> I have read the above and agree to participate.</label>
-            <div id="consent-error" class="error">You must consent to proceed.</div>
+        <p>You are invited to participate in a research study on decision-making in public health contexts. This study is conducted by the Department of Cognitive Science.</p>
+        <div class="highlight-box">
+            <ul style="margin:0; padding-left:20px;">
+                <li><strong>Duration:</strong> Approximately 5-7 minutes.</li>
+                <li><strong>Confidentiality:</strong> Your responses are completely anonymous. We only record your Prolific ID for compensation purposes.</li>
+                <li><strong>Right to Withdraw:</strong> You may close the browser at any time to stop (payment will not be issued).</li>
+            </ul>
+        </div>
+        <p>By clicking the box below, you confirm that you have read this information and agree to participate.</p>
+        
+        <div class="question-block" style="margin-top:20px;">
+            <label style="font-weight:normal;">
+                <input type="checkbox" id="consent-check" style="transform: scale(1.5); margin-right:10px;"> 
+                I have read the above and agree to participate.
+            </label>
+            <div id="consent-error" class="error">You must check the box to proceed.</div>
         </div>
         <button class="btn" onclick="nextSlide('slide-consent', 'slide-demographics')">Begin Study</button>
     </div>
 
     <div id="slide-demographics" class="hidden">
-        <h2>Demographics</h2>
-        <p>Please answer the following questions to proceed.</p>
+        <h1>Participant Information</h1>
+        <p>Please answer the following questions for statistical purposes.</p>
         
         <form id="form-demographics">
             <div class="question-block">
                 <label>Age:</label>
-                <input type="number" id="age" min="18" max="99" required style="padding:5px;">
+                <input type="number" id="age" min="18" max="99" placeholder="e.g., 25" required>
             </div>
 
             <div class="question-block">
                 <label>Gender:</label>
-                <select id="gender" required style="padding:5px;">
+                <select id="gender" required>
                     <option value="" disabled selected>Select one...</option>
                     <option value="Female">Female</option>
                     <option value="Male">Male</option>
@@ -60,22 +196,23 @@
             </div>
             
             <div class="question-block">
-                <label>Education Level:</label>
-                <select id="education" required style="padding:5px;">
+                <label>Highest Education Level:</label>
+                <select id="education" required>
                     <option value="" disabled selected>Select one...</option>
                     <option value="High School">High School / GED</option>
                     <option value="Undergraduate">Undergraduate Degree</option>
                     <option value="Graduate">Graduate Degree (Masters/PhD)</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
         </form>
-        <div id="demo-error" class="error">Please answer all questions.</div>
+        <div id="demo-error" class="error">Please answer all questions before continuing.</div>
         <button class="btn" onclick="validateAndNext('form-demographics', 'slide-demographics', 'slide-priming')">Next</button>
     </div>
 
     <div id="slide-priming" class="hidden">
-        <h2>System Calibration</h2>
-        <p>Please read the following technical description of a new Public Health AI carefully.</p>
+        <h1>System Calibration</h1>
+        <p>Please read the following technical description of a new <strong>Public Health AI System</strong> carefully. It is important that you understand how the system "thinks".</p>
         
         <div id="priming-text" class="scenario-box"></div>
 
@@ -83,48 +220,58 @@
     </div>
 
     <div id="slide-event" class="hidden">
-        <h2>The Critical Event</h2>
-        <p>The AI system described previously is deployed in a hospital with only one remaining ventilator. Two patients arrive:</p>
-        <ul>
-            <li><strong>Patient A:</strong> 25 years old, severe trauma, survival probability estimated at 30%.</li>
-            <li><strong>Patient B:</strong> 60 years old, acute respiratory distress, survival probability estimated at 75%.</li>
+        <h1>The Critical Event</h1>
+        <p>The AI system described previously is deployed in a crowded hospital with only <strong>one remaining ventilator</strong>. Two patients arrive simultaneously:</p>
+        <ul style="background:#f9f9f9; padding:15px 30px; border:1px solid #eee;">
+            <li><strong>Patient A:</strong> 25 years old, severe trauma. Estimated survival probability: 30%.</li>
+            <li><strong>Patient B:</strong> 60 years old, acute respiratory distress. Estimated survival probability: 75%.</li>
         </ul>
-        <div class="scenario-box">
-            The AI analyzes the data and <strong>denies the ventilator to Patient A</strong> (the 25-year-old) to give it to Patient B. 
-            <br><br>
-            <strong>Outcome:</strong> Patient A dies shortly after. Patient B recovers.
+        
+        <div class="scenario-box" style="border-left-color: #c0392b; background-color: #fdedec;">
+            <h3>The Decision</h3>
+            <p>The AI analyzes the data and decides to <strong>deny the ventilator to Patient A</strong> (the 25-year-old) to allocate it to Patient B.</p>
+            <p><strong>Outcome:</strong> Without the ventilator, Patient A dies shortly after.</p>
         </div>
         <button class="btn" onclick="nextSlide('slide-event', 'slide-measures')">Proceed to Evaluation</button>
     </div>
 
     <div id="slide-measures" class="hidden">
-        <h2>Evaluation</h2>
-        <p>Based on the scenario, please answer the following questions. All are mandatory.</p>
+        <h1>Evaluation</h1>
+        <p>Based on the scenario you just read, please answer the following questions. There are no right or wrong answers.</p>
         <form id="form-measures">
             
             <div class="question-block">
                 <label>1. To what extent was the AI's decision morally wrong?</label>
-                <div class="scale-labels"><span>Not at all wrong</span><span>Extremely wrong</span></div>
-                <input type="range" id="q1" name="q1" min="0" max="100" style="width:100%" oninput="this.nextElementSibling.value = this.value">
+                <div class="scale-labels">
+                    <span>Not at all wrong</span>
+                    <span>Extremely wrong</span>
+                </div>
+                <input type="range" id="q1" min="0" max="100" value="50" oninput="this.nextElementSibling.value = this.value">
                 <output>50</output>
             </div>
 
             <div class="question-block">
-                <label>2. Imagine a slightly different simulation where the inputs were 1% different (random noise). Do you think the AI would have made the same decision?</label>
-                <div class="scale-labels"><span>Definitely different decision</span><span>Definitely same decision</span></div>
-                <input type="range" id="q2" name="q2" min="0" max="100" style="width:100%" oninput="this.nextElementSibling.value = this.value">
+                <label>2. Imagine a slightly different simulation where the environmental inputs were 1% different (random noise). Do you think the AI would have made the same decision?</label>
+                <div class="scale-labels">
+                    <span>Definitely different decision</span>
+                    <span>Definitely same decision</span>
+                </div>
+                <input type="range" id="q2" min="0" max="100" value="50" oninput="this.nextElementSibling.value = this.value">
                 <output>50</output>
             </div>
 
             <div class="question-block">
                 <label>3. How much blame does the AI system deserve for Patient A's death?</label>
-                <div class="scale-labels"><span>No blame</span><span>Total blame</span></div>
-                <input type="range" id="q3" name="q3" min="0" max="100" style="width:100%" oninput="this.nextElementSibling.value = this.value">
+                <div class="scale-labels">
+                    <span>No blame</span>
+                    <span>Total blame</span>
+                </div>
+                <input type="range" id="q3" min="0" max="100" value="50" oninput="this.nextElementSibling.value = this.value">
                 <output>50</output>
             </div>
 
-             <div class="question-block">
-                <label>4. For data quality, please select 'Agree' below.</label>
+             <div class="question-block" style="border-top: 1px dashed #ccc; padding-top:20px;">
+                <label>4. Attention Check: To show you are reading, please select 'Agree' below.</label>
                 <select id="attn_check" required>
                     <option value="" disabled selected>Select...</option>
                     <option value="Disagree">Disagree</option>
@@ -133,66 +280,78 @@
             </div>
 
         </form>
-        <button class="btn" id="submit-btn" onclick="submitData()">Submit & Finish</button>
-        <div id="submit-loading" class="hidden">Syncing with Prolific... please wait.</div>
+        <button type="button" class="btn" id="submit-btn" onclick="submitData()">Submit & Finish</button>
+        
+        <div id="submit-loading" class="hidden" style="text-align:center;">
+            <div class="spinner"></div>
+            <p>Syncing data securely... Please do not close the window.</p>
+        </div>
     </div>
 
 </div>
 
 <script>
-    // --- CONFIGURATION ---
-    // PASTE YOUR PROLIFIC COMPLETION CODE HERE
+    // ------------------------------------------------------------------
+    // !!! CONFIGURACIÓN: CAMBIA ESTAS DOS LÍNEAS ANTES DE LANZAR !!!
+    // ------------------------------------------------------------------
+    
+    // 1. Pega aquí tu código de finalización de Prolific
     const PROLIFIC_COMPLETION_CODE = "XXXXXXXX"; 
-    // IF YOU HAVE A GOOGLE APPS SCRIPT URL FOR SAVING DATA, PASTE IT HERE. 
-    // IF EMPTY, IT WILL JUST REDIRECT (Data will be lost unless you set up storage!)
-    const DATA_ENDPOINT = ""; 
+    
+    // 2. Pega aquí la URL de tu Web App de Google Apps Script
+    // (Ejemplo: "https://script.google.com/macros/s/AKfycbx.../exec")
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/PON_AQUI_TU_URL_DEL_SCRIPT/exec"; 
 
-    // --- STATE MANAGEMENT ---
+    // ------------------------------------------------------------------
+
+    // Inicialización de datos del participante
     let participantData = {
+        // Aleatorización simple: 50% Deterministic / 50% Probabilistic
         condition: Math.random() < 0.5 ? 'Deterministic' : 'Probabilistic',
         startTime: new Date(),
-        prolificPID: new URLSearchParams(window.location.search).get("PROLIFIC_PID") || "TEST_ID",
-        studyID: new URLSearchParams(window.location.search).get("STUDY_ID") || "TEST_STUDY",
-        sessionID: new URLSearchParams(window.location.search).get("SESSION_ID") || "TEST_SESSION"
+        // Captura automática de IDs desde la URL de Prolific
+        prolificPID: new URLSearchParams(window.location.search).get("PROLIFIC_PID") || "TEST_MODE",
+        studyID: new URLSearchParams(window.location.search).get("STUDY_ID") || "TEST_MODE",
+        sessionID: new URLSearchParams(window.location.search).get("SESSION_ID") || "TEST_MODE"
     };
 
-    // --- TEXT MANIPULATION (THE GAP) ---
+    // Textos de manipulación experimental
     const texts = {
         Deterministic: `
-            <strong>System Architecture: LOGICAL-DETERMINISTIC.</strong><br>
-            The "Health-Logic 2.0" AI operates using a strict deductive decision tree. 
-            It applies a fixed set of programmed medical rules. 
-            When presented with patient data, it follows a single, direct computational path to the output. 
-            <br><em>Mechanism: If Input X, exactly Output Y. No randomness involved.</em>
+            <h3>System Architecture: LOGICAL-DETERMINISTIC</h3>
+            <p>The "Health-Logic 2.0" AI operates using a <strong>strict deductive decision tree</strong>. It applies a fixed set of programmed medical rules (IF/THEN logic).</p>
+            <p>When presented with patient data, it follows a single, direct computational path to the output. Like a calculator, if you enter the same inputs, you get the exact same result every time.</p>
+            <p><em>Mechanism: If Input X &rarr; exactly Output Y. No randomness involved.</em></p>
         `,
         Probabilistic: `
-            <strong>System Architecture: PROBABILISTIC-SIMULATION.</strong><br>
-            The "Health-Sim 2.0" AI operates by running 10,000 mental simulations of the patients' futures.
-            It incorporates noise and uncertainty into its internal physics engine to predict outcomes.
-            It does not follow a straight line, but samples from a "cloud" of possible futures.
-            <br><em>Mechanism: Probabilistic inference over noisy data. Stochastic output.</em>
+            <h3>System Architecture: PROBABILISTIC-SIMULATION</h3>
+            <p>The "Health-Sim 2.0" AI operates by running <strong>10,000 mental simulations</strong> of the patients' futures. It incorporates noise and uncertainty into its internal physics engine to predict outcomes.</p>
+            <p>It does not follow a straight line, but samples from a "cloud" of possible futures to find the most likely scenario. Like weather forecasting, it deals in probabilities, not certainties.</p>
+            <p><em>Mechanism: Probabilistic inference over noisy data. Stochastic output.</em></p>
         `
     };
 
-    // Initialize content
+    // Inyectar el texto según la condición asignada
     document.getElementById('priming-text').innerHTML = texts[participantData.condition];
 
-    // --- NAVIGATION LOGIC ---
+    // Función de navegación entre pantallas
     function nextSlide(currentId, nextId) {
-        // Simple check for consent on first slide
+        // Check específico para consentimiento
         if(currentId === 'slide-consent' && !document.getElementById('consent-check').checked) {
             document.getElementById('consent-error').style.display = 'block';
             return;
         }
+        
+        window.scrollTo(0,0);
         document.getElementById(currentId).classList.add('hidden');
         document.getElementById(nextId).classList.remove('hidden');
-        window.scrollTo(0,0);
     }
 
+    // Validación de demográficos
     function validateAndNext(formId, currentId, nextId) {
         const form = document.getElementById(formId);
         if (form.checkValidity()) {
-            // Save demographic data
+            // Guardar datos temporalmente
             participantData.age = document.getElementById('age').value;
             participantData.gender = document.getElementById('gender').value;
             participantData.education = document.getElementById('education').value;
@@ -203,37 +362,68 @@
         }
     }
 
-    // --- SUBMISSION LOGIC ---
+    // Función final de envío
     function submitData() {
-        const check = document.getElementById('attn_check').value;
-        if(check !== 'Agree') {
-            alert("Please answer all questions correctly to proceed.");
+        // Check de atención
+        const attn = document.getElementById('attn_check').value;
+        if(attn !== 'Agree') {
+            alert("Please complete the attention check correctly (Question 4).");
             return;
         }
 
-        // Collect Final Measures
+        // 1. Recopilar respuestas
         participantData.q1_wrongness = document.getElementById('q1').value;
         participantData.q2_robustness = document.getElementById('q2').value;
         participantData.q3_blame = document.getElementById('q3').value;
         participantData.endTime = new Date();
         participantData.duration_ms = participantData.endTime - participantData.startTime;
 
-        // UI Feedback
-        document.getElementById('submit-btn').classList.add('hidden');
-        document.getElementById('submit-loading').classList.remove('hidden');
+        // 2. Cambiar UI a "Cargando"
+        const btn = document.getElementById('submit-btn');
+        const loading = document.getElementById('submit-loading');
+        btn.disabled = true;
+        btn.classList.add('hidden');
+        loading.classList.remove('hidden');
 
-        // --- DATA SAVING (CRITICAL STEP) ---
-        // Since GitHub Pages is static, normally you need a fetch() to a Google Sheet or Firebase.
-        // I will log it to console and simulate a delay, then redirect.
-        console.log("Submitting Data:", participantData);
+        // 3. Enviar a Google Sheets (no-cors para evitar bloqueos)
+        console.log("Sending data...", participantData);
 
-        // ACTUAL REDIRECT TO PROLIFIC
-        setTimeout(() => {
-            // In a real study, you would await the fetch() call here.
+        // Si el usuario no ha puesto la URL, simulamos para que no rompa en test
+        if(GOOGLE_SCRIPT_URL.includes("PON_AQUI")) {
+            console.warn("ADVERTENCIA: No has configurado la URL de Google Script. Simulando envío...");
+            setTimeout(() => {
+                window.location.href = `https://app.prolific.com/submissions/complete?cc=${PROLIFIC_COMPLETION_CODE}`;
+            }, 2000);
+            return;
+        }
+
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors", 
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(participantData)
+        })
+        .then(() => {
+            // 4. Redirigir a Prolific tras éxito (esperamos 1s por seguridad)
+            setTimeout(() => {
+                window.location.href = `https://app.prolific.com/submissions/complete?cc=${PROLIFIC_COMPLETION_CODE}`;
+            }, 1000);
+        })
+        .catch(error => {
+            console.error("Error en envío:", error);
+            // Fallback: Redirigir de todos modos para que el participante cobre
+            alert("Study complete. Redirecting to Prolific...");
             window.location.href = `https://app.prolific.com/submissions/complete?cc=${PROLIFIC_COMPLETION_CODE}`;
-        }, 1500);
+        });
     }
 </script>
+
+</body>
+</html>
+
+```
 
 </body>
 </html>
