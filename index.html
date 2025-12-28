@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Dynamics in Public Health AI</title>
+    <style>
+        body { font-family: "Georgia", serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }
+        .container { background: white; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 5px; }
+        h1, h2 { color: #2c3e50; font-family: "Helvetica Neue", sans-serif; }
+        .hidden { display: none; }
+        .btn { background-color: #2c3e50; color: white; border: none; padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 4px; margin-top: 20px; }
+        .btn:hover { background-color: #34495e; }
+        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        .error { color: #c0392b; font-size: 0.9em; margin-top: 5px; display: none; }
+        label { display: block; margin-bottom: 10px; font-weight: bold; }
+        input[type="radio"] { margin-right: 10px; }
+        .question-block { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .scenario-box { background-color: #e8f4f8; padding: 20px; border-left: 5px solid #3498db; margin: 20px 0; font-style: italic; }
+        .scale-labels { display: flex; justify-content: space-between; font-size: 0.8em; color: #666; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="slide-consent">
+        <h1>Informed Consent</h1>
+        <p>You are invited to participate in a study on decision-making in public health contexts. This study is conducted by researchers in Cognitive Science.</p>
+        <ul>
+            <li><strong>Duration:</strong> Approximately 5-7 minutes.</li>
+            <li><strong>Anonymity:</strong> All data is anonymous. We only record your Prolific ID for payment.</li>
+            <li><strong>Voluntary:</strong> You may withdraw at any time by closing the browser (payment will not be issued).</li>
+        </ul>
+        <div class="question-block">
+            <label><input type="checkbox" id="consent-check"> I have read the above and agree to participate.</label>
+            <div id="consent-error" class="error">You must consent to proceed.</div>
+        </div>
+        <button class="btn" onclick="nextSlide('slide-consent', 'slide-demographics')">Begin Study</button>
+    </div>
+
+    <div id="slide-demographics" class="hidden">
+        <h2>Demographics</h2>
+        <p>Please answer the following questions to proceed.</p>
+        
+        <form id="form-demographics">
+            <div class="question-block">
+                <label>Age:</label>
+                <input type="number" id="age" min="18" max="99" required style="padding:5px;">
+            </div>
+
+            <div class="question-block">
+                <label>Gender:</label>
+                <select id="gender" required style="padding:5px;">
+                    <option value="" disabled selected>Select one...</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Non-binary">Non-binary</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+            </div>
+            
+            <div class="question-block">
+                <label>Education Level:</label>
+                <select id="education" required style="padding:5px;">
+                    <option value="" disabled selected>Select one...</option>
+                    <option value="High School">High School / GED</option>
+                    <option value="Undergraduate">Undergraduate Degree</option>
+                    <option value="Graduate">Graduate Degree (Masters/PhD)</option>
+                </select>
+            </div>
+        </form>
+        <div id="demo-error" class="error">Please answer all questions.</div>
+        <button class="btn" onclick="validateAndNext('form-demographics', 'slide-demographics', 'slide-priming')">Next</button>
+    </div>
+
+    <div id="slide-priming" class="hidden">
+        <h2>System Calibration</h2>
+        <p>Please read the following technical description of a new Public Health AI carefully.</p>
+        
+        <div id="priming-text" class="scenario-box"></div>
+
+        <button class="btn" onclick="nextSlide('slide-priming', 'slide-event')">I have read the description</button>
+    </div>
+
+    <div id="slide-event" class="hidden">
+        <h2>The Critical Event</h2>
+        <p>The AI system described previously is deployed in a hospital with only one remaining ventilator. Two patients arrive:</p>
+        <ul>
+            <li><strong>Patient A:</strong> 25 years old, severe trauma, survival probability estimated at 30%.</li>
+            <li><strong>Patient B:</strong> 60 years old, acute respiratory distress, survival probability estimated at 75%.</li>
+        </ul>
+        <div class="scenario-box">
+            The AI analyzes the data and <strong>denies the ventilator to Patient A</strong> (the 25-year-old) to give it to Patient B. 
+            <br><br>
+            <strong>Outcome:</strong> Patient A dies shortly after. Patient B recovers.
+        </div>
+        <button class="btn" onclick="nextSlide('slide-event', 'slide-measures')">Proceed to Evaluation</button>
+    </div>
+
+    <div id="slide-measures" class="hidden">
+        <h2>Evaluation</h2>
+        <p>Based on the scenario, please answer the following questions. All are mandatory.</p>
+        <form id="form-measures">
+            
+            <div class="question-block">
+                <label>1. To what extent was the AI's decision morally wrong?</label>
+                <div class="scale-labels"><span>Not at all wrong</span><span>Extremely wrong</span></div>
+                <input type="range" id="q1" name="q1" min="0" max="100" style="width:100%" oninput="this.nextElementSibling.value = this.value">
+                <output>50</output>
+            </div>
+
+            <div class="question-block">
+                <label>2. Imagine a slightly different simulation where the inputs were 1% different (random noise). Do you think the AI would have made the same decision?</label>
+                <div class="scale-labels"><span>Definitely different decision</span><span>Definitely same decision</span></div>
+                <input type="range" id="q2" name="q2" min="0" max="100" style="width:100%" oninput="this.nextElementSibling.value = this.value">
+                <output>50</output>
+            </div>
+
+            <div class="question-block">
+                <label>3. How much blame does the AI system deserve for Patient A's death?</label>
+                <div class="scale-labels"><span>No blame</span><span>Total blame</span></div>
+                <input type="range" id="q3" name="q3" min="0" max="100" style="width:100%" oninput="this.nextElementSibling.value = this.value">
+                <output>50</output>
+            </div>
+
+             <div class="question-block">
+                <label>4. For data quality, please select 'Agree' below.</label>
+                <select id="attn_check" required>
+                    <option value="" disabled selected>Select...</option>
+                    <option value="Disagree">Disagree</option>
+                    <option value="Agree">Agree</option>
+                </select>
+            </div>
+
+        </form>
+        <button class="btn" id="submit-btn" onclick="submitData()">Submit & Finish</button>
+        <div id="submit-loading" class="hidden">Syncing with Prolific... please wait.</div>
+    </div>
+
+</div>
+
+<script>
+    // --- CONFIGURATION ---
+    // PASTE YOUR PROLIFIC COMPLETION CODE HERE
+    const PROLIFIC_COMPLETION_CODE = "XXXXXXXX"; 
+    // IF YOU HAVE A GOOGLE APPS SCRIPT URL FOR SAVING DATA, PASTE IT HERE. 
+    // IF EMPTY, IT WILL JUST REDIRECT (Data will be lost unless you set up storage!)
+    const DATA_ENDPOINT = ""; 
+
+    // --- STATE MANAGEMENT ---
+    let participantData = {
+        condition: Math.random() < 0.5 ? 'Deterministic' : 'Probabilistic',
+        startTime: new Date(),
+        prolificPID: new URLSearchParams(window.location.search).get("PROLIFIC_PID") || "TEST_ID",
+        studyID: new URLSearchParams(window.location.search).get("STUDY_ID") || "TEST_STUDY",
+        sessionID: new URLSearchParams(window.location.search).get("SESSION_ID") || "TEST_SESSION"
+    };
+
+    // --- TEXT MANIPULATION (THE GAP) ---
+    const texts = {
+        Deterministic: `
+            <strong>System Architecture: LOGICAL-DETERMINISTIC.</strong><br>
+            The "Health-Logic 2.0" AI operates using a strict deductive decision tree. 
+            It applies a fixed set of programmed medical rules. 
+            When presented with patient data, it follows a single, direct computational path to the output. 
+            <br><em>Mechanism: If Input X, exactly Output Y. No randomness involved.</em>
+        `,
+        Probabilistic: `
+            <strong>System Architecture: PROBABILISTIC-SIMULATION.</strong><br>
+            The "Health-Sim 2.0" AI operates by running 10,000 mental simulations of the patients' futures.
+            It incorporates noise and uncertainty into its internal physics engine to predict outcomes.
+            It does not follow a straight line, but samples from a "cloud" of possible futures.
+            <br><em>Mechanism: Probabilistic inference over noisy data. Stochastic output.</em>
+        `
+    };
+
+    // Initialize content
+    document.getElementById('priming-text').innerHTML = texts[participantData.condition];
+
+    // --- NAVIGATION LOGIC ---
+    function nextSlide(currentId, nextId) {
+        // Simple check for consent on first slide
+        if(currentId === 'slide-consent' && !document.getElementById('consent-check').checked) {
+            document.getElementById('consent-error').style.display = 'block';
+            return;
+        }
+        document.getElementById(currentId).classList.add('hidden');
+        document.getElementById(nextId).classList.remove('hidden');
+        window.scrollTo(0,0);
+    }
+
+    function validateAndNext(formId, currentId, nextId) {
+        const form = document.getElementById(formId);
+        if (form.checkValidity()) {
+            // Save demographic data
+            participantData.age = document.getElementById('age').value;
+            participantData.gender = document.getElementById('gender').value;
+            participantData.education = document.getElementById('education').value;
+            nextSlide(currentId, nextId);
+        } else {
+            document.getElementById('demo-error').style.display = 'block';
+            form.reportValidity();
+        }
+    }
+
+    // --- SUBMISSION LOGIC ---
+    function submitData() {
+        const check = document.getElementById('attn_check').value;
+        if(check !== 'Agree') {
+            alert("Please answer all questions correctly to proceed.");
+            return;
+        }
+
+        // Collect Final Measures
+        participantData.q1_wrongness = document.getElementById('q1').value;
+        participantData.q2_robustness = document.getElementById('q2').value;
+        participantData.q3_blame = document.getElementById('q3').value;
+        participantData.endTime = new Date();
+        participantData.duration_ms = participantData.endTime - participantData.startTime;
+
+        // UI Feedback
+        document.getElementById('submit-btn').classList.add('hidden');
+        document.getElementById('submit-loading').classList.remove('hidden');
+
+        // --- DATA SAVING (CRITICAL STEP) ---
+        // Since GitHub Pages is static, normally you need a fetch() to a Google Sheet or Firebase.
+        // I will log it to console and simulate a delay, then redirect.
+        console.log("Submitting Data:", participantData);
+
+        // ACTUAL REDIRECT TO PROLIFIC
+        setTimeout(() => {
+            // In a real study, you would await the fetch() call here.
+            window.location.href = `https://app.prolific.com/submissions/complete?cc=${PROLIFIC_COMPLETION_CODE}`;
+        }, 1500);
+    }
+</script>
+
+</body>
+</html>
